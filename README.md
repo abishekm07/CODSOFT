@@ -1,51 +1,61 @@
-import heapq
-
-class LinkStateRouter:
-    def __init__(self, graph):
-        self.graph = graph  # Graph as an adjacency matrix
-
-    def dijkstra(self, start):
-        distances = {node: float('inf') for node in range(len(self.graph))}
-        distances[start] = 0
-        priority_queue = [(0, start)]
-
-        while priority_queue:
-            curr_dist, curr_node = heapq.heappop(priority_queue)
-
-            # If we've already found a shorter path before, skip
-            if curr_dist > distances[curr_node]:
-                continue
-
-            for neighbor, weight in enumerate(self.graph[curr_node]):
-                # Skip non-connected nodes (weight 0), except self-loops
-                if weight == 0 and neighbor != curr_node:
                     continue
 
-                distance = curr_dist + weight
+      def xor(a, b):
+    # Perform XOR operation on two strings
+    result = []
+    for i in range(1, len(b)):
+        result.append('0' if a[i] == b[i] else '1')
+    return ''.join(result)
 
-                # If we found a shorter path, update
-                if distance < distances[neighbor]:
-                    distances[neighbor] = distance
-                    heapq.heappush(priority_queue, (distance, neighbor))
+def mod2div(dividend, divisor):
+    # Perform Modulo-2 division
+    pick = len(divisor)
+    tmp = dividend[0:pick]
 
-        return distances
+    while pick < len(dividend):
+        if tmp[0] == '1':
+            tmp = xor(divisor, tmp) + dividend[pick]
+        else:
+            tmp = xor('0' * pick, tmp) + dividend[pick]
+        pick += 1
 
-    def calculate_routes(self):
-        return {node: self.dijkstra(node) for node in range(len(self.graph))}
+    # Last bit of the division
+    if tmp[0] == '1':
+        tmp = xor(divisor, tmp)
+    else:
+        tmp = xor('0' * pick, tmp)
+    return tmp
 
+def encode_data(data, key):
+    # Append zeros equivalent to the key's length - 1
+    l_key = len(key)
+    appended_data = data + '0' * (l_key - 1)
+    remainder = mod2div(appended_data, key)
+    # Append remainder to the original data (codeword)
+    codeword = data + remainder
+    return codeword
 
-# Example Usage
-graph = [
-    [0, 2, 0, 1, 0],
-    [2, 0, 3, 2, 0],
-    [0, 3, 0, 0, 1],
-    [1, 2, 0, 0, 4],
-    [0, 0, 1, 4, 0]
-]
+def decode_data(data, key):
+    remainder = mod2div(data, key)
+    return remainder
 
-router = LinkStateRouter(graph)
-routes = router.calculate_routes()
+# Example usage
+if __name__ == "__main__":
+    # Example data to be transmitted
+    data = "1011001"  # Binary data to transmit
+    key = "1101"      # Divisor (CRC key)
 
-print("Link State Routing Table:")
-for start_node, distances in routes.items():
-    print(f"From {start_node}: {distances}")
+    # Sender side: encoding the data with CRC
+    print("Original Data: ", data)
+    codeword = encode_data(data, key)
+    print("Encoded Data (Codeword): ", codeword)
+
+    # Receiver side: decoding the received codeword
+    received_data = codeword  # In a real scenario, this would be the received codeword
+    remainder = decode_data(received_data, key)
+
+    # Check if there is an error
+    if '1' in remainder:
+        print("Error detected in received data.")
+    else:
+        print("No error detected in received data.")
