@@ -1,0 +1,83 @@
+-- Drop tables if already exist
+DROP TABLE IF EXISTS sales_january;
+DROP TABLE IF EXISTS sales_february;
+
+-- Create January table
+CREATE TABLE sales_january (
+    name VARCHAR(50),
+    city VARCHAR(50),
+    value INT
+);
+
+-- Create February table
+CREATE TABLE sales_february (
+    name VARCHAR(50),
+    city VARCHAR(50),
+    value INT
+);
+
+-- Insert January Data
+INSERT INTO sales_january VALUES
+('Alice', 'New York', 1000),
+('Bob', 'Chicago', 1500),
+('Charlie', 'Boston', 1200),
+('Diana', 'Houston', 900),
+('Ethan', 'Seattle', 800),
+('Fiona', 'Miami', 1100),
+('George', 'Denver', 950),
+('Hannah', 'San Francisco', 1300),
+('Ian', 'Dallas', 1400),
+('Julia', 'Atlanta', 1250);
+
+-- Insert February Data
+INSERT INTO sales_february VALUES
+('Alice', 'New York', 1100),
+('Bob', 'Chicago', 1500),
+('Charlie', 'Boston', 1200),
+('Kevin', 'Houston', 1000),
+('Laura', 'Seattle', 850),
+('Mike', 'Miami', 1150),
+('Nina', 'Denver', 970),
+('Oscar', 'San Francisco', 1350),
+('Paul', 'Dallas', 1450),
+('Quinn', 'Atlanta', 1280);
+
+-------------------------------------------------------
+-- 1. UNION (Removes duplicates)
+-------------------------------------------------------
+SELECT name, city, value FROM sales_january
+UNION
+SELECT name, city, value FROM sales_february;
+
+-------------------------------------------------------
+-- 2. UNION ALL (Keeps duplicates)
+-------------------------------------------------------
+SELECT name, city, value FROM sales_january
+UNION ALL
+SELECT name, city, value FROM sales_february;
+
+-------------------------------------------------------
+-- 3. EXISTS (Common records in both months)
+-------------------------------------------------------
+SELECT name, city, value
+FROM sales_january j
+WHERE EXISTS (
+    SELECT 1
+    FROM sales_february f
+    WHERE f.name = j.name
+    AND f.city = j.city
+    AND f.value = j.value
+);
+
+-------------------------------------------------------
+-- 4. NOT EXISTS (Only in January, not in February)
+-------------------------------------------------------
+SELECT name, city, value
+FROM sales_january j
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM sales_february f
+    WHERE f.name = j.name
+    AND f.city = j.city
+    AND f.value = j.value
+);
