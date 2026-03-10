@@ -1,0 +1,46 @@
+-- CREATE TABLE
+CREATE TABLE Customers (
+    id INT,
+    name VARCHAR(20),
+    age INT,
+    address VARCHAR(20),
+    salary DECIMAL(10,2)
+);
+
+-- INSERT VALUES
+INSERT INTO Customers VALUES (1, 'Ramesh', 32, 'Ahmedabad', 2000.00);
+INSERT INTO Customers VALUES (2, 'Khilan', 25, 'Delhi', 1500.00);
+INSERT INTO Customers VALUES (3, 'Kaushik', 23, 'Kota', 2000.00);
+INSERT INTO Customers VALUES (4, 'Chaitali', 25, 'Mumbai', 6500.00);
+INSERT INTO Customers VALUES (5, 'Hardik', 27, 'Bhopal', 8500.00);
+INSERT INTO Customers VALUES (6, 'Komal', 22, 'MP', 4500.00);
+INSERT INTO Customers VALUES (7, 'Muffy', 24, 'Indore', 1000.00);
+
+-- DISPLAY TABLE
+SELECT * FROM Customers;
+
+-- CREATING VIEW
+CREATE VIEW Customers_View AS
+SELECT name, age
+FROM Customers;
+
+-- DISPLAY VIEW
+SELECT * FROM Customers_View;
+
+-- UPDATING VIEW
+UPDATE Customers_View
+SET age = 35
+WHERE name = 'Ramesh';
+
+-- DISPLAY UPDATED TABLE
+SELECT * FROM Customers;
+
+-- DELETING ROW FROM VIEW
+DELETE FROM Customers_View
+WHERE age = 22;
+
+-- DISPLAY AFTER DELETE
+SELECT * FROM Customers;
+
+-- DROPPING VIEW
+DROP VIEW Customers_View;
