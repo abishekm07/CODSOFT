@@ -1,0 +1,6 @@
+Procedure
+Step 1: Start the SQL environment (MySQL) and create the table EMPLOYEE with required columns using the CREATE TABLE command.
+Step 2: Insert records into the EMPLOYEE table using the INSERT INTO command.
+Step 3: Retrieve employee details from the EMPLOYEE table where the department is 'sales' using the SELECT statement with WHERE condition.
+Step 4: Modify the table structure by removing the dept column using the ALTER TABLE command.
+Step 5: Display the contents of the EMPLOYEE table after alteration using SELECT statement.
