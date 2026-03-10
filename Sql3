@@ -1,0 +1,10 @@
+Step 1: Start the MySQL / SQL environment.
+Step 2: Create a table named EMP with required attributes.
+Step 3: Insert sample records into the EMP table.
+Step 4: Add a new attribute Designation using the ALTER TABLE command.
+Step 5: Modify the datatype of Salary.
+Step 6: Drop the attribute Dept_Name from the table.
+Step 7: Create another table named Company.
+Step 8: Insert records into the Company table.
+Step 9: Delete records where salary is less than 500 using the DELETE command.
+Step 10: Stop the program.
