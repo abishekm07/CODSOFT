@@ -1,0 +1,37 @@
+-- 1. CLEANUP (Optional: ensures a fresh start in the compiler)
+DROP TABLE IF EXISTS jan_month_sales_data;
+DROP TABLE IF EXISTS feb_month_sales_data;
+DROP VIEW IF EXISTS sales_comparison_summary;
+-- 2. CREATE TABLES
+CREATE TABLE jan_month_sales_data (
+ name VARCHAR(50),
+ city VARCHAR(50),
+ values_amount DECIMAL(10, 2));
+CREATE TABLE feb_month_sales_data (
+ name VARCHAR(50),
+ city VARCHAR(50),
+ values_amount DECIMAL(10, 2)
+);
+-- 3. INSERT SAMPLE DATA
+-- Alice is consistent, Bob changed his value, Charlie is Jan only, David is Feb only.
+INSERT INTO jan_month_sales_data VALUES ('Alice', 'New York', 1000), ('Bob', 'London', 
+1500), ('Charlie', 'Paris', 1200);
+INSERT INTO feb_month_sales_data VALUES ('Alice', 'New York', 1000), ('Bob', 'London', 
+1800), ('David', 'Tokyo', 2000);
+-- 4. CREATE A VIEW USING SET OPERATIONS
+-- This view labels the source of the data for easier reading
+CREATE VIEW sales_comparison_summary AS
+SELECT name, city, values_amount, 'Common to Both' AS status FROM 
+jan_month_sales_data
+INTERSECT
+SELECT name, city, values_amount, 'Common to Both' FROM feb_month_sales_data
+UNION ALL
+SELECT name, city, values_amount, 'January Only' FROM jan_month_sales_data
+EXCEPT
+SELECT name, city, values_amount, 'January Only' FROM feb_month_sales_data
+UNION ALL
+SELECT name, city, values_amount, 'February Only' FROM feb_month_sales_data
+EXCEPT
+SELECT name, city, values_amount, 'February Only' FROM jan_month_sales_data;-- 5. EXECUTE AND VIEW RESULTS
+SELECT * FROM sales_comparison_summary 
+ORDER BY status, name;
