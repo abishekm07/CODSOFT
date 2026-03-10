@@ -1,0 +1,9 @@
+Step 1: Start the SQL environment.
+Step 2: Create the required table.
+Step 3: Insert sample records into the table.
+Step 4: Use the AND operator to combine multiple conditions.
+Step 5: Use the OR operator to check alternative conditions.
+Step 6: Use the BETWEEN operator to select values within a range.
+Step 7: Execute the queries.
+Step 8: Display the results.
+Step 9: Stop the program.
