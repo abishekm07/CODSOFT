@@ -1,0 +1,10 @@
+Step 1: Open the MySQL command line environment.
+Step 2: Select the required database.
+Step 3: Create the EMPLOYEES table using the CREATE TABLE command.
+Step 4: Insert sample records using the INSERT INTO command.
+Step 5: Change the delimiter to create a stored procedure.
+Step 6: Create a stored procedure to display employee details.
+Step 7: Reset the delimiter to the default symbol.
+Step 8: Update the salary of a specific employee using the UPDATE command.
+Step 9: Delete a specific employee record using the DELETE command.
+Step 10: Stop the program.
