@@ -1,0 +1,81 @@
+/* 1. CLEANUP */
+DROP TABLE IF EXISTS sales_audit_log;
+DROP VIEW IF EXISTS sales_comparison_summary;
+DROP TABLE IF EXISTS jan_month_sales_data;
+DROP TABLE IF EXISTS feb_month_sales_data;
+
+/* 2. TABLE CREATION */
+
+CREATE TABLE jan_month_sales_data (
+    name VARCHAR(50),
+    city VARCHAR(50),
+    values_amount DECIMAL(10,2)
+);
+
+CREATE TABLE feb_month_sales_data (
+    name VARCHAR(50),
+    city VARCHAR(50),
+    values_amount DECIMAL(10,2)
+);
+
+CREATE TABLE sales_audit_log (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    old_value DECIMAL(10,2),
+    new_value DECIMAL(10,2),
+    changed_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+/* 3. INSERT DATA */
+
+INSERT INTO jan_month_sales_data VALUES
+('Alice','New York',1000),
+('Bob','London',1500),
+('Charlie','Paris',1200);
+
+INSERT INTO feb_month_sales_data VALUES
+('Alice','New York',1000),
+('Bob','London',1800),
+('David','Tokyo',2000);
+
+/* 4. TRIGGER */
+
+DELIMITER $$
+
+CREATE TRIGGER log_feb_updates
+AFTER UPDATE ON feb_month_sales_data
+FOR EACH ROW
+BEGIN
+    INSERT INTO sales_audit_log(name, old_value, new_value)
+    VALUES (OLD.name, OLD.values_amount, NEW.values_amount);
+END$$
+
+DELIMITER ;
+
+/* 5. VIEW */
+
+CREATE VIEW sales_comparison_summary AS
+
+SELECT j.name, j.city, j.values_amount,
+'Consistent' AS status
+FROM jan_month_sales_data j
+JOIN feb_month_sales_data f
+ON j.name=f.name AND j.city=f.city AND j.values_amount=f.values_amount
+
+UNION ALL
+
+SELECT j.name, j.city, j.values_amount,
+'Jan Only/Changed'
+FROM jan_month_sales_data j
+LEFT JOIN feb_month_sales_data f
+ON j.name=f.name AND j.city=f.city AND j.values_amount=f.values_amount
+WHERE f.name IS NULL
+
+UNION ALL
+
+SELECT f.name, f.city, f.values_amount,
+'Feb Only/Changed'
+FROM feb_month_sales_data f
+LEFT JOIN jan_month_sales_data j
+ON f.name=j.name AND f.city=j.city AND f.values_amount=j.values_amount
+WHERE j.name IS NULL;
